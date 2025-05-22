@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-#!/usr/bin/fish
+
 printf "origin_paramters:\n$argv\n"
 set -l ARGS $(getopt -o c: -l clientname: -- $argv)
 
@@ -85,7 +85,7 @@ else
 end
 
 # =========================
-# 生成客户端请求和签名
+# generate client request and signature
 # =========================
 
 if not test -f ./pki/private/$CLIENT_NAME.key
@@ -103,7 +103,7 @@ else
 end
 
 # ================
-# 生成 TLS 密钥
+# generate TLS key
 # ================
 if not test -f ./pki/ta.key
     echo "generating TLS pre-shared key ta.key..."
@@ -113,7 +113,7 @@ else
 end
 
 # ===========================
-# 生成客户端配置文件
+# generate client configuration file
 # ===========================
 echo "creating client configuration file..."
 set -l OUTPUT_FILE $CONFIG_DIR/$CLIENT_NAME.ovpn
