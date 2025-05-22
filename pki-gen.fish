@@ -39,49 +39,49 @@ set -l EASYRSA easyrsa
 set -l EASYRSA_FLAG --sbatch
 set -l EASYRSA $EASYRSA $EASYRSA_FLAG
 
-# 初始化 PKI 环境
-# 初始化 PKI（如果未初始化）
+# initialize PKI environment
+# initialize PKI (if not initialized)
 if not test -d ./pki
-    echo "初始化 PKI..."
+    echo "initializing PKI..."
     $EASYRSA init-pki
 else
-    echo "PKI 已初始化，跳过"
+    echo "PKI already initialized, skipping"
 end
 
-# 生成 CA（如果不存在 CA 证书）
+# generate CA (if not exists CA certificate)
 if not test -f ./pki/ca.crt
-    # 构建 CA，无密码，无交互
-    echo "构建 CA..."
+    # build CA, no password, no interaction
+    echo "building CA..."
     $EASYRSA build-ca nopass
 else
-    echo "CA 已存在，跳过"
+    echo "CA already exists, skipping"
 end
 
 # =====================
-# 生成服务器请求和签名
+# generate server request and signature
 # =====================
 if not test -f ./pki/private/$SERVER_NAME.key
-    echo "生成服务器私钥请求..."
+    echo "generating server private key request..."
     $EASYRSA gen-req $SERVER_NAME nopass
 else
-    echo "服务器私钥已存在，跳过"
+    echo "server private key already exists, skipping"
 end
 
 if not test -f ./pki/issued/$SERVER_NAME.crt
-    echo "签发服务器证书..."
+    echo "signing server certificate..."
     $EASYRSA sign-req server $SERVER_NAME
 else
-    echo "服务器证书已签发，跳过"
+    echo "server certificate already signed, skipping"
 end
 
 # ================
-# 生成 DH 参数
+# generate DH parameters
 # ================
 if not test -f ./pki/dh.pem
-    echo "生成 Diffie-Hellman 参数..."
+    echo "generating Diffie-Hellman parameters..."
     $EASYRSA gen-dh
 else
-    echo "DH 参数已存在，跳过"
+    echo "DH parameters already exist, skipping"
 end
 
 # =========================
@@ -89,36 +89,36 @@ end
 # =========================
 
 if not test -f ./pki/private/$CLIENT_NAME.key
-    echo "生成客户端私钥请求..."
+    echo "generating client private key request..."
     $EASYRSA gen-req $CLIENT_NAME nopass
 else
-    echo "客户端私钥已存在，跳过"
+    echo "client private key already exists, skipping"
 end
 
 if not test -f ./pki/issued/$CLIENT_NAME.crt
-    echo "签发客户端证书..."
+    echo "signing client certificate..."
     $EASYRSA sign-req client $CLIENT_NAME
 else
-    echo "客户端证书已签发，跳过"
+    echo "client certificate already signed, skipping"
 end
 
 # ================
 # 生成 TLS 密钥
 # ================
 if not test -f ./pki/ta.key
-    echo "生成 TLS 预共享密钥 ta.key..."
+    echo "generating TLS pre-shared key ta.key..."
     openvpn --genkey secret ./pki/ta.key
 else
-    echo "TLS 密钥已存在，跳过"
+    echo "TLS key already exists, skipping"
 end
 
 # ===========================
 # 生成客户端配置文件
 # ===========================
-echo "创建客户端配置文件..."
+echo "creating client configuration file..."
 set -l OUTPUT_FILE $CONFIG_DIR/$CLIENT_NAME.ovpn
 
-cat ctemplate.ovpn > $OUTPUT_FILE
+cat ctemplate.ovpn >$OUTPUT_FILE
 
 echo "<ca>" >>$OUTPUT_FILE
 cat $CONFIG_DIR/pki/ca.crt >>$OUTPUT_FILE
@@ -136,4 +136,4 @@ echo "<tls-auth>" >>$OUTPUT_FILE
 cat $CONFIG_DIR/pki/ta.key >>$OUTPUT_FILE
 echo "</tls-auth>" >>$OUTPUT_FILE
 
-echo "✅ 客户端配置文件生成完成: $OUTPUT_FILE"
+echo "✅ client configuration file generated: $OUTPUT_FILE"
