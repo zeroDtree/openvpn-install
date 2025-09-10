@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}My Files - OpenVPN Client Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="bi bi-folder"></i> My Files
+    </h2>
+    <div class="text-muted">
+        Welcome, {{ session.username }}!
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-folder-check display-4 text-primary"></i>
+                <h5 class="card-title mt-2">My Client Files</h5>
+                <h3 class="text-primary">{{ assigned_count }}</h3>
+                <p class="text-muted">OpenVPN client configuration files assigned to you</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Client file list -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-list-ul"></i> My Client Files
+        </h5>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="refreshTable()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="clientsTable">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Assigned Date</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    {% if not client[4] and client[1] == session.username %}
+                    <tr>
+                        <td>
+                            <i class="bi bi-file-earmark-code"></i>
+                            <strong>{{ client[0] }}</strong>
+                        </td>
+                        <td>
+                            {% if client[2] %}
+                            <small class="text-muted">{{ client[2] }}</small>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if client[3] %}
+                            <small>{{ client[3] }}</small>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('download_client', filename=client[0]) }}" 
+                               class="btn btn-primary btn-sm" 
+                               title="Download file">
+                                <i class="bi bi-download"></i> Download
+                            </a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshTable() {
+    location.reload();
+}
+
+// Auto refresh table (every 30 seconds)
+setInterval(function() {
+    // AJAX refresh logic can be added here
+}, 30000);
+</script>
+{% endblock %}
