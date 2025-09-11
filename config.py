@@ -11,7 +11,7 @@ class Config:
     
     # Server configuration
     HOST = '0.0.0.0'
-    PORT = int(os.environ.get('PORT', 5000))
+    PORT = int(os.environ.get('OPENVPN_WEB_PORT', 5000))
     DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     
     # File path configuration
