@@ -137,16 +137,26 @@ def unassign_file(filename):
     finally:
         conn.close()
 
-def batch_assign_files(user_pattern, file_pattern, notes=""):
-    """Batch assign files"""
+def batch_assign_files(user_pattern, file_pattern, notes="", exclude_admin=True):
+    """Batch assign files
+    
+    Args:
+        user_pattern: Regex pattern to match users
+        file_pattern: Regex pattern to match files
+        notes: Optional notes for assignment
+        exclude_admin: Whether to exclude admin user (default: True)
+    """
     import re
     
     conn = get_db_connection()
     cursor = conn.cursor()
     
     try:
-        # Get all users
-        cursor.execute('SELECT username FROM users')
+        # Get all users (optionally excluding admin)
+        if exclude_admin:
+            cursor.execute('SELECT username FROM users WHERE username != ?', ('admin',))
+        else:
+            cursor.execute('SELECT username FROM users')
         all_users = [row[0] for row in cursor.fetchall()]
         
         # Use standard regex to match users
@@ -208,6 +218,8 @@ def main():
     parser.add_argument('--batch-assign', nargs=2, metavar=('USER_PATTERN', 'FILE_PATTERN'),
                        help='Batch assign files (using regex)')
     parser.add_argument('--notes', type=str, default='', help='Add notes')
+    parser.add_argument('--include-admin', action='store_true', 
+                       help='Include admin user in batch assignment (default: exclude admin)')
     
     args = parser.parse_args()
     
@@ -222,7 +234,8 @@ def main():
         unassign_file(args.unassign)
     elif args.batch_assign:
         user_pattern, file_pattern = args.batch_assign
-        batch_assign_files(user_pattern, file_pattern, args.notes)
+        exclude_admin = not args.include_admin
+        batch_assign_files(user_pattern, file_pattern, args.notes, exclude_admin)
     else:
         # Interactive mode
         while True:
@@ -267,8 +280,10 @@ def main():
                 user_pattern = input("Please enter user regex pattern: ").strip()
                 file_pattern = input("Please enter file regex pattern: ").strip()
                 notes = input("Please enter notes (optional): ").strip()
+                include_admin = input("Include admin user? (y/N): ").strip().lower() in ['y', 'yes']
+                exclude_admin = not include_admin
                 if user_pattern and file_pattern:
-                    batch_assign_files(user_pattern, file_pattern, notes)
+                    batch_assign_files(user_pattern, file_pattern, notes, exclude_admin)
             else:
                 print("Invalid choice, please try again!")
 

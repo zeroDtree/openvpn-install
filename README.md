@@ -207,9 +207,7 @@ If no server IP is specified, the generated client configuration files will use 
 The web management interface provides a user-friendly way to distribute OpenVPN client configuration files to users. It includes:
 
 - User authentication system
-- Client file assignment tracking
 - Download management
-- Admin panel for file distribution
 
 ### 4.2. Installation and Setup
 
@@ -224,7 +222,15 @@ The web management interface provides a user-friendly way to distribute OpenVPN 
    pip3 install -r requirements.txt
    ```
 
-2. **Initialize the database:**
+2. **Modify file path of client files:**(in `config.py`)
+
+   ```python
+    # File path configuration
+    CLIENT_FILES_DIR = '.'  # Base directory where client files are located
+    CLIENT_FILE_PATTERN = 'clients_ovpn/client*.ovpn'  # Client file matching pattern
+   ```
+
+3. **Initialize the database:**
 
    ```bash
    python3 db_init.py
@@ -237,7 +243,7 @@ The web management interface provides a user-friendly way to distribute OpenVPN 
    - Add default admin user
    - Scan for existing client files and add them to database
 
-3. **Start the web server:**
+4. **Start the web server:**
 
    ```bash
    ./start_server.sh
@@ -249,7 +255,7 @@ The web management interface provides a user-friendly way to distribute OpenVPN 
    python3 app.py
    ```
 
-4. **Access the web interface:**
+5. **Access the web interface:**
    - Open your browser and go to `http://localhost:5000`
    - Default admin credentials: `admin` / `admin123`
 
@@ -296,11 +302,8 @@ python3 manage_users.py --list-users
 #### 4.4.3. Generate Random Users:
 
 ```bash
-# Generate 50 random users
-python3 generate_random_users.py -n 50 -o users.csv
-
-# Generate users with admin account
-python3 generate_random_users.py -n 100 --include-admin -o users.csv
+# Generate 100 random users
+python3 generate_random_users.py -n 100 -o users.csv
 
 # Preview generated users
 python3 generate_random_users.py -n 10 --preview
