@@ -1,11 +1,5 @@
 #!/bin/env bash
 
-# Usage: batch-pki-gen.sh [-n <num_clients>] [-s <server_ip>] [-p <port>] [-o <output_dir>]
-#   -n, --num-clients: Number of clients to generate (default: 100)
-#   -s, --server: Server IP address (optional)
-#   -p, --port: Server port (optional, default: 1194)
-#   -o, --output-dir: Output directory for client files (optional, default: current directory)
-
 if [ $# -eq 0 ]; then
     echo "Usage: batch-pki-gen.sh [-n <num_clients>] [-s <server_ip>] [-p <port>] [-o <output_dir>]"
     echo "  -n, --num-clients: Number of clients to generate (default: 100)"

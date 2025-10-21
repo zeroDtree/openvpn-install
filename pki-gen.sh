@@ -1,11 +1,5 @@
 #!/bin/env bash
 
-# Usage: pki-gen.sh -c <client_name> [-s <server_ip>] [-p <port>] [-o <output_dir>]
-#   -c, --clientname: Client name (required)
-#   -s, --server: Server IP address (optional, if not provided, template will be used as-is)
-#   -p, --port: Server port (optional, default: 1194)
-#   -o, --output-dir: Output directory for client file (optional, default: current directory)
-
 if [ $# -eq 0 ]; then
     echo "Usage: pki-gen.sh -c <client_name> [-s <server_ip>] [-p <port>] [-o <output_dir>]"
     echo "  -c, --clientname: Client name (required)"
