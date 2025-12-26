@@ -11,7 +11,7 @@ def main():
     parser = argparse.ArgumentParser(description="Batch generate OpenVPN CCD files")
     parser.add_argument("-c", "--config", default="config/ccd_config.yaml", help="Path to configuration file")
     parser.add_argument("--start", type=int, default=31, help="Starting client number (default: 31)")
-    parser.add_argument("--end", type=int, default=254, help="Ending client number (default: 254)")
+    parser.add_argument("--end", type=int, default=250, help="Ending client number (default: 250)")
 
     args = parser.parse_args()
 
