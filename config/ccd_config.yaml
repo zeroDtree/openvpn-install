@@ -1,0 +1,13 @@
+vpn:
+  network: 10.10.0.0/24
+  netmask: 255.255.255.0
+
+paths:
+  ccd_dir: /etc/openvpn/ccd
+
+reserved_ips:
+  server: 10.10.0.1
+
+client_pool:
+  start: 10.10.0.31
+  end: 10.10.0.254
